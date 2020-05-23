@@ -1,5 +1,5 @@
 import React from "react";
-import EItem from "./EItem.js";
+import EItem from "./EitemMUI.js";
 import { Container, Row, Col } from "react-bootstrap";
 
 class Events extends React.Component {
@@ -45,7 +45,7 @@ class Events extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Container style={{marginTop:"80px"}}>
           {this.state.events.map(event => (
 
               <EItem key={event.id} event={event} />

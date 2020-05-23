@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+    background: "#bc4e9c", /* fallback for old browsers */
+     background: "-webkit-linear-gradient(to right, #f80759, #bc4e9c)",  /* Chrome 10-25, Safari 5.1-6 */
+      background: "linear-gradient(to right, #f80759, #bc4e9c)" /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   },
   appBarShift: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -114,7 +117,7 @@ export default function AppBarEM({token, signout, addEvent}) {
               Event Manager
             </Typography>
           ):
-            (<Typography variant="h6" noWrap style={{margin:"auto"}}>
+            (<Typography variant="h4" noWrap style={{margin:"auto"}}>
                       Event Manager
                     </Typography>)}
 

@@ -1,6 +1,5 @@
 import React, {Component, Fragment} from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
-import Event from "./Event.js";
 import SignIn from "./SignInMUI.js";
 import SignUp from "./SignUpMUI.js";
 import Home from "./Home.js"
@@ -23,9 +22,9 @@ class App extends Component {
     localStorage.setItem("token", "tokensignin");
     console.log(localStorage.getItem("token")+" Retrieved")
   }
-  signup = (email, password) => {
+  signup = (props) => {
     this.setState({token:'hari'});
-    console.log(email + " " + password);
+    console.log(props.email + " " + props.password + " " + props.fname + " " + props.lname);
     console.log(this.state.token);
     localStorage.setItem("token", "tokensignup");
   }

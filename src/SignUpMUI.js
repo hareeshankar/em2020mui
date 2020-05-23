@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { Redirect } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -46,10 +47,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp({signup,token}) {
   const classes = useStyles();
-
+  const [state, setState] = React.useState({
+    fname: "",
+    lname: "",
+    email: "",
+    password: ""
+  });
+  const onSubmit = e => {
+//  e.preventDefault();
+  console.log("clicked signin");
+  signup(state);
+  };
+  function handleChange(evt) {
+      const value =
+        evt.target.type === "checkbox" ? evt.target.checked : evt.target.value;
+      setState({
+        ...state,
+        [evt.target.name]: value
+      });
+    }
   return (
+    token ?
+    (<Redirect to="/Home" />) :(
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -59,17 +80,18 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} onSubmit={onSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="fname"
                 variant="outlined"
                 required
                 fullWidth
                 id="firstName"
                 label="First Name"
+                onChange={handleChange}
                 autoFocus
               />
             </Grid>
@@ -80,8 +102,9 @@ export default function SignUp() {
                 fullWidth
                 id="lastName"
                 label="Last Name"
-                name="lastName"
+                name="lname"
                 autoComplete="lname"
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -93,6 +116,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -105,6 +129,7 @@ export default function SignUp() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={handleChange}
               />
             </Grid>
 
@@ -130,6 +155,6 @@ export default function SignUp() {
       <Box mt={5}>
         <Copyright />
       </Box>
-    </Container>
+    </Container>)
   );
 }
