@@ -1,6 +1,7 @@
 import React from "react";
 import EItem from "./EitemMUI.js";
 import { Container, Row, Col } from "react-bootstrap";
+import Typography from '@material-ui/core/Typography';
 
 class Events extends React.Component {
   constructor(props) {
@@ -45,13 +46,19 @@ class Events extends React.Component {
 
   render() {
     return (
-      <Container style={{marginTop:"80px"}}>
+      <div style={{width:"80%",marginTop:"80px",marginLeft:"auto",marginRight:"auto"}}>
+      <Typography component="h1" variant="h5" color="primary">
+        Ongoing Events 
+        <hr/>
+      </Typography>
+      <Container >
           {this.state.events.map(event => (
 
               <EItem key={event.id} event={event} />
 
           ))}
       </Container>
+      </div>
     );
   }
 }

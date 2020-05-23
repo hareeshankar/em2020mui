@@ -16,7 +16,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import AddIcon from '@material-ui/icons/Add';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MailIcon from '@material-ui/icons/Mail';
+import { useHistory } from "react-router-dom";
+//import Link from '@material-ui/core/Link';
 import { Redirect, Link } from "react-router-dom";
 const drawerWidth = 240;
 
@@ -92,6 +97,14 @@ export default function AppBarEM({token, signout, addEvent}) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  let history = useHistory();
+  const handleRedirect = () =>
+  {
+    console.log("clicked redirect");
+    handleDrawerClose();
+    history.push("/addEvent");
+
+  }
 
   return (
     <div className={classes.root}>
@@ -140,12 +153,13 @@ export default function AppBarEM({token, signout, addEvent}) {
         <Divider />
         <List>
 
-            <ListItem button onClick={() => {return(addEvent(), handleDrawerClose())}}>
-              <ListItemIcon> <InboxIcon />}</ListItemIcon>
-              <ListItemText primary={"Add New Event"} />
+            <ListItem button onClick={() => {handleRedirect()}}>
+              <ListItemIcon>    <AddBoxIcon color="primary" /></ListItemIcon>
+              <ListItemText primary={"Add Event"} />
             </ListItem>
+
             <ListItem button onClick={() => {return(signout(), handleDrawerClose())}}>
-              <ListItemIcon> <InboxIcon />}</ListItemIcon>
+              <ListItemIcon> <ExitToAppIcon color="secondary"/></ListItemIcon>
               <ListItemText primary={"Sign Out"} />
             </ListItem>
 

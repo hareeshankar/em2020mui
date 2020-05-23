@@ -7,13 +7,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import CardHeader from '@material-ui/core/CardHeader';
 
 const useStyles = makeStyles({
   root: {
-    width: "80%",
     marginTop:"10px",
-    marginLeft:"auto",
-    marginRight:"auto"
   },
   media: {
     height: 140,
@@ -30,28 +28,25 @@ export default function MediaCard(props) {
     userId,
     id
   } = props.event;
+  const subheader = eventloc + "  " + eventdate;
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <Card
+          <CardHeader
           title={eventname}
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {eventloc} {"  "}{eventdate}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-          {eventdes}
-          </Typography>
-        </CardContent>
+          subheader={subheader}
+          />
+          <CardContent style={{paddingTop:"0px"}}>
+            {eventdes}
+          </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" color="primary">
-          Edit
-        </Button>
-        <Button size="small" color="primary">
-          Manage
-        </Button>
+          <Button size="small" color="primary">
+            Edit
+          </Button>
+          <Button size="small" color="primary">
+            Manage
+          </Button>
       </CardActions>
     </Card>
   );

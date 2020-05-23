@@ -7,7 +7,8 @@ import NoMatch from "./NoMatch.js"
 import ProtectedRoute from "./ProtectedRoute.js";
 import NavBar from "./NavBar.js";
 import SideBar from "./SideBar.js";
-import AppBar from "./AppBar.js"
+import AppBar from "./AppBar.js";
+import AddEvent from "./AddEvent.js";
 
 class App extends Component {
   constructor(){
@@ -30,17 +31,16 @@ class App extends Component {
   }
   signout = () => {
     console.log("clicked sign out");
-      this.setState({sbtoggle:false, token:""});
+      this.setState({token:""});
       localStorage.removeItem("token");
   }
-  addEvent = () => {
-    console.log("Clicked Add Event");
-      this.setState({sbtoggle:false});
+  saveEvent = (props) => {
+    console.log(props);
   }
   render() {
     return (
       <Router>
-      <AppBar signout={this.signout} token={this.state.token} addEvent={this.addEvent}/>
+      <AppBar signout={this.signout} token={this.state.token} />
       <Switch>
       <Route exact path="/signin" render=  { (props) => (
         <Fragment>
@@ -50,6 +50,11 @@ class App extends Component {
       <Route exact path="/signup" render=  { (props) => (
         <Fragment>
         <SignUp signup={this.signup} token={this.state.token} />
+        </Fragment>)
+      } />
+      <Route exact path="/addEvent" render=  { (props) => (
+        <Fragment>
+        <AddEvent saveEvent={this.saveEvent} token={this.state.token} />
         </Fragment>)
       } />
       <ProtectedRoute path="/home" component={Home} token={this.state.token}/>

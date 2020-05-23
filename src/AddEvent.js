@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Redirect } from "react-router-dom";
+import { useHistory, Redirect } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -46,16 +46,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn({signin, token}) {
+export default function AddEvent({saveEvent, token}) {
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    email: "",
-    password: ""
-  });
+  let history = useHistory();
+  const [state, setState] = React.useState(        {
+            eventname: "",
+            eventdate: "",
+            eventloc: "",
+            eventdes: "",
+          },);
   const onSubmit = e => {
-//  e.preventDefault();
-  console.log("clicked signin");
-  signin(state.email, state.password);
+  e.preventDefault();
+  console.log("submitted add event");
+  saveEvent(state);
+  history.push("/");
   };
   function handleChange(evt) {
       const value =
@@ -66,16 +70,13 @@ export default function SignIn({signin, token}) {
       });
     }
   return (
-    token ?
+    !token ?
     (<Redirect to="/Home" />) : (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Add Event Details
         </Typography>
         <form className={classes.form} onSubmit={onSubmit}>
           <TextField
@@ -83,10 +84,10 @@ export default function SignIn({signin, token}) {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            type="email"
+            id="ename"
+            label="Event Name"
+            name="eventname"
+            type="text"
             autoComplete="email"
             onChange={handleChange}
             autoFocus
@@ -96,17 +97,41 @@ export default function SignIn({signin, token}) {
             margin="normal"
             required
             fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
+            name="eventdate"
+            label="Event Date"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            type="date"
+            id="edate"
             onChange={handleChange}
             autoComplete="current-password"
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="eventloc"
+            label="Event Location"
+            type="text"
+            id="edate"
+            onChange={handleChange}
+            autoComplete="current-password"
           />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="eventdes"
+            label="Event Description"
+            type="text"
+            id="edate"
+            onChange={handleChange}
+            autoComplete="current-password"
+          />
+
           <Button
             type="submit"
             fullWidth
@@ -114,20 +139,8 @@ export default function SignIn({signin, token}) {
             color="primary"
             className={classes.submit}
           >
-            Sign In
+            Submit
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="signup" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
         </form>
       </div>
       <Box mt={8}>
