@@ -41,19 +41,23 @@ const useStyles = makeStyles((theme) => ({
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
+  typo1: {
+  textAlign: "center",
+  textColor: "#ff0000"
+  },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
 }));
 
-export default function SignIn({signin, token}) {
+export default function SignIn({signin, token, errmsg}) {
   const classes = useStyles();
   const [state, setState] = React.useState({
     email: "",
     password: ""
   });
   const onSubmit = e => {
-//  e.preventDefault();
+  e.preventDefault();
   console.log("clicked signin");
   signin(state.email, state.password);
   };
@@ -76,6 +80,13 @@ export default function SignIn({signin, token}) {
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
+        </Typography>
+        <Typography
+          className={classes.typo1}
+          variant="subtitle2"
+          color="error"
+        >
+          {errmsg}
         </Typography>
         <form className={classes.form} onSubmit={onSubmit}>
           <TextField
