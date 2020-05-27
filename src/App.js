@@ -11,6 +11,7 @@ import AppBar from "./AppBar.js";
 import AddEvent from "./AddEvent.js";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import LinearProgress from '@material-ui/core/LinearProgress';
 class App extends Component {
   constructor(){
     super();
@@ -18,7 +19,8 @@ class App extends Component {
       token: localStorage.getItem("token") || "",
       user: {},
       events: [],
-      errmsg: ""
+      errmsg: "",
+      loading: false
     }
   }
   signin = (email, password) => {
@@ -26,6 +28,7 @@ class App extends Component {
       email: email,
       password: password
     }
+    this.setState({loading:true,errmsg:""});
     axios.request(
       {
         method:'post',
@@ -35,7 +38,7 @@ class App extends Component {
     ).then(
       res => {
         console.log("RESPONSE RECEIVED: ", res);
-        this.setState(state => ({ token: res.data.id }));
+        this.setState(state => ({ token: res.data.id, loading: false }));
         const userId = res.data.userId;
         localStorage.setItem("token", res.data.id);
         //this.getUser(userId);
@@ -52,7 +55,8 @@ class App extends Component {
           mesg = "Login Failed. Username or password incorrect";
           console.log(mesg);
           this.setState(state => ({
-            errmsg: mesg
+            errmsg: mesg,
+            loading: false
           }));
         }
       }
@@ -70,6 +74,7 @@ class App extends Component {
       password : props.password,
       emailVerified: true
     }
+    this.setState({loading:true,errmsg:""});
     axios.request({
       method:'post',
       url:'https://eventmanagerapi.herokuapp.com/api/Users',
@@ -85,14 +90,20 @@ class App extends Component {
             emailVerified: false,
             userId: res.data.id
           },
-          errmsg: "Sign up Successful. Please login !"
+          errmsg: "Sign up Successful. Please login !",
+          loading: false
         });
+        console.log("Loading: ", this.state.loading);
       }
     ).catch( err =>
       {
       console.log("AXIOS ERROR: ", err);
       console.log(err.response.data.error.statuscode);
+      this.setState({loading:false});
       let errmsgobj = JSON.stringify(err.response.data.error.statusCode);
+      //this.setState({
+      //  errmsg: JSON.stringify(err.response.data)
+      //});
       if (errmsgobj === "401") {
         let mesg = "Sign Up Failed. Username or password incorrect";
         console.log(mesg);
@@ -107,9 +118,7 @@ class App extends Component {
           errmsg: mesg
         });
       }
-      this.setState({
-        errmsg: JSON  .stringify(err.response.data)
-      });
+
       }
     );
 
@@ -127,15 +136,16 @@ class App extends Component {
     return (
       <Router>
       <AppBar signout={this.signout} token={this.state.token} />
+      {this.state.loading ?  (<LinearProgress style={{zIndex:"2000"}}/>):(null)}
       <Switch>
       <Route exact path="/signin" render=  { (props) => (
         <Fragment>
-        <SignIn signin={this.signin} token={this.state.token} errmsg={this.state.errmsg} />
+        <SignIn signin={this.signin} token={this.state.token} errmsg={this.state.errmsg} loading={this.state.loading} />
         </Fragment>)
       } />
       <Route exact path="/signup" render=  { (props) => (
         <Fragment>
-        <SignUp signup={this.signup} token={this.state.token} errmsg={this.state.errmsg}/>
+        <SignUp signup={this.signup} token={this.state.token} errmsg={this.state.errmsg} loading={this.state.loading}/>
         </Fragment>)
       } />
       <Route exact path="/addEvent" render=  { (props) => (

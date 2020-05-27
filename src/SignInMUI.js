@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3, 0, 2),
   },
 }));
-
-export default function SignIn({signin, token, errmsg}) {
+let disable="";
+export default function SignIn({signin, token, errmsg, loading}) {
   const classes = useStyles();
   const [state, setState] = React.useState({
     email: "",
@@ -88,6 +88,7 @@ export default function SignIn({signin, token, errmsg}) {
         >
           {errmsg}
         </Typography>
+
         <form className={classes.form} onSubmit={onSubmit}>
           <TextField
             variant="outlined"
@@ -124,6 +125,7 @@ export default function SignIn({signin, token, errmsg}) {
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={loading}
           >
             Sign In
           </Button>

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp({signup,token,errmsg}) {
+export default function SignUp({signup,token,errmsg,loading}) {
   const classes = useStyles();
   const [state, setState] = React.useState({
     fname: "",
@@ -156,6 +156,7 @@ export default function SignUp({signup,token,errmsg}) {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
+                disabled={loading}
               >
                 Sign Up
               </Button>
