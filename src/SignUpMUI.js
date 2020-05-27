@@ -130,6 +130,7 @@ export default function SignUp({signup,token,errmsg}) {
                     id="email"
                     label="Email Address"
                     name="email"
+                    type="email"
                     autoComplete="email"
                     onChange={handleChange}
                   />
