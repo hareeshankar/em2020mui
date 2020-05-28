@@ -46,19 +46,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddEvent({saveEvent, token}) {
+export default function AddEvent({saveEvent, token, userId}) {
   const classes = useStyles();
   let history = useHistory();
   const [state, setState] = React.useState(        {
             eventname: "",
             eventdate: "",
             eventloc: "",
-            eventdes: "",
+            eventdes: ""
           },);
   const onSubmit = e => {
   e.preventDefault();
-  console.log("submitted add event");
-  saveEvent(state);
+  let event = {
+    eventname: state.eventname,
+    eventdate: state.eventdate,
+    eventloc: state.eventloc,
+    eventdes: state.eventdes,
+    userId: userId
+  }
+  console.log("submitted add event" + event);
+  saveEvent(event);
   history.push("/");
   };
   function handleChange(evt) {
@@ -140,6 +147,15 @@ export default function AddEvent({saveEvent, token}) {
             className={classes.submit}
           >
             Submit
+          </Button>
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={() => history.push("/") }
+          >
+            Back to Home
           </Button>
         </form>
       </div>

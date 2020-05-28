@@ -17,7 +17,7 @@ class App extends Component {
     super();
     this.state={
       token: localStorage.getItem("token") || "",
-      user: {},
+      user: JSON.parse(localStorage.getItem("user")) || {},
       events: [],
       errmsg: "",
       loading: false
@@ -38,11 +38,11 @@ class App extends Component {
     ).then(
       res => {
         console.log("RESPONSE RECEIVED: ", res);
-        this.setState(state => ({ token: res.data.id, loading: false }));
+        this.setState(state => ({ token: res.data.id, loading: false, user: {userId: res.data.userId }}));
         const userId = res.data.userId;
         localStorage.setItem("token", res.data.id);
-        //this.getUser(userId);
-        //this.getEvents(userId);
+        this.getUser(userId);
+        this.getEvents(userId);
       }
     ).catch(
       err => {
@@ -127,10 +127,128 @@ class App extends Component {
     console.log("clicked sign out");
       this.setState({token:""});
       localStorage.removeItem("token");
+      localStorage.removeItem("user");
   }
   saveEvent = (props) => {
+    this.setState({loading:true,errmsg:""});
+    console.log(props);
+    axios.request({
+      method:'post',
+      url:'https://eventmanagerapi.herokuapp.com/api/events?access_token='+this.state.token,
+      data: props
+    }).then(
+      res => {
+        console.log("Event added Successfully:", res);
+          this.setState({loading:false});
+        console.log("Loading: ", this.state.loading);
+        this.getEvents(props.userId);
+      }
+    ).catch( err =>
+      {
+      console.log("AXIOS ERROR: ", err);
+      console.log(err.response.data.error.statuscode);
+      this.setState({loading:false});
+      let errmsgobj = JSON.stringify(err.response.data.error.statusCode);
+      //this.setState({
+      //  errmsg: JSON.stringify(err.response.data)
+      //});
+      if (errmsgobj === "401") {
+        let mesg = "Sign Up Failed. Username or password incorrect";
+        console.log(mesg);
+        this.setState({
+          errmsg: mesg
+        });
+      }
+      if (errmsgobj === "422") {
+        let mesg = "Sign Up Failed. Invalid Email/Username !";
+        console.log(mesg);
+        this.setState({
+          errmsg: mesg
+        });
+      }
+
+      }
+    );
     console.log(props);
 
+  }
+
+  /* Get user and get events *//////////////////////////
+  getEvents = userId => {
+    let getEventsURL =
+      'https://eventmanagerapi.herokuapp.com/api/events?filter={"where" : {"userId" : "' +
+      userId +
+      '" }}&access_token=' +
+      this.state.token;
+    axios
+      .get(getEventsURL)
+      .then(response => {
+        this.setState({ events: response.data });
+        console.log("response received:", response);
+        //    this.setState({ events: response.data }, function() {
+        //     console.log(this.state.events);
+        //  });
+        console.log("events retrieved: ", this.state.events);
+        if (
+          typeof this.state.events != "undefined" &&
+          this.state.events != null &&
+          this.state.events.length != null &&
+          this.state.events.length > 0
+        ) {
+          console.log("Entered If block true");
+          this.setState({ showevents: true });
+        } else {
+          console.log("Entered If block false");
+          this.setState({ showevents: false });
+        }
+      })
+      .catch(function(error) {
+        console.log("AXIOS ERROR: ", error);
+      });
+  };
+  getUser = userId => {
+    let getUserURL =
+      "https://eventmanagerapi.herokuapp.com/api/Users/" +
+      userId +
+      "?access_token=" +
+      this.state.token;
+    axios
+      .get(getUserURL)
+      .then(res => {
+        console.log("RESPONSE RECEIVED: ", res);
+        this.setState({
+          user: {
+            realm: res.data.realm,
+            username: res.data.username,
+            email: res.data.email,
+            emailVerified: false,
+            userId: res.data.id
+          }
+        });
+        console.log(
+          "user updated in context state: " + JSON.stringify(this.state.user)
+        );
+        localStorage.setItem("user", JSON.stringify(this.state.user));
+      })
+      .catch(err => {
+        console.log("AXIOS ERROR: ", err);
+        console.log(err.response.data.error.statuscode);
+        let errmsgobj = JSON.stringify(err.response.data.error.statusCode);
+        if (errmsgobj === "401") {
+          let mesg = "Get User Failed. Username or password incorrect";
+          console.log(mesg);
+          this.setState(state => ({
+            errmsg: mesg
+          }));
+        }
+        this.setState(state => ({
+          errmsg: err.response.data
+        }));
+      });
+  };
+///////////////////////////////////////////////////
+  componentDidMount() {
+    this.getEvents(this.state.user.userId);
   }
   render() {
     return (
@@ -150,10 +268,14 @@ class App extends Component {
       } />
       <Route exact path="/addEvent" render=  { (props) => (
         <Fragment>
-        <AddEvent saveEvent={this.saveEvent} token={this.state.token} />
+        <AddEvent saveEvent={this.saveEvent} token={this.state.token} userId={this.state.user.userId} />
         </Fragment>)
       } />
-      <ProtectedRoute path="/home" component={Home} token={this.state.token}/>
+      <Route exact path="/Home" render=  { (props) => (
+        <Fragment>
+        <Home events={this.state.events} token={this.state.token} />
+        </Fragment>)
+      } />
       <Route exact path="/" render={() => <Redirect to="/home" />} />
       <Route component={NoMatch} />
       </Switch>

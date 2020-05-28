@@ -5,7 +5,10 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-export default function Home (props) {
+import Button from '@material-ui/core/Button';
+import { Redirect } from "react-router-dom";
+
+export default function Home ({ events, token}) {
   function Copyright() {
     return (
       <Typography variant="body2" color="textSecondary" align="center">
@@ -19,11 +22,28 @@ export default function Home (props) {
     );
   }
   return(
+    token ? (
     <div>
-      <Events />
-      <Box mt={8} style={{marginBottom:"20px"}}>
+      {events && events.length ? (<Events events={events} />) : (
+        <div style={{width:"80%",marginTop:"80px",marginLeft:"auto",marginRight:"auto"}}>
+        <Typography component="h1" variant="h5" color="primary">
+          No Events to show. Please add new events to manage.
+          <hr/>
+        </Typography>
+        <Link color="inherit" href="/addEvent">
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+        >
+          Add Event
+        </Button>
+        </Link>
+        </div>
+      )}
+      <footer id="footer">
         <Copyright />
-      </Box>
-    </div>
+      </footer>
+    </div>) : (<Redirect to="/signin" />)
   );
 }

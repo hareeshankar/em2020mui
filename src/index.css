@@ -7,7 +7,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #fff;
 }
+#footer {
+  position : absolute;
+  bottom : 0;
+  width: 100%;
+  margin-top : 10px;
+  margin-bottom: 10px;
 
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
