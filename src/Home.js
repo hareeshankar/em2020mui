@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Redirect } from "react-router-dom";
 
-export default function Home ({ events, token}) {
+export default function Home ({ events, token, username, loading}) {
   function Copyright() {
     return (
       <Typography variant="body2" color="textSecondary" align="center">
@@ -23,27 +23,31 @@ export default function Home ({ events, token}) {
   }
   return(
     token ? (
-    <div>
+    <div id="home">
       {events && events.length ? (<Events events={events} />) : (
         <div style={{width:"80%",marginTop:"80px",marginLeft:"auto",marginRight:"auto"}}>
-        <Typography component="h1" variant="h5" color="primary">
-          No Events to show. Please add new events to manage.
-          <hr/>
-        </Typography>
-        <Link color="inherit" href="/addEvent">
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-        >
-          Add Event
-        </Button>
-        </Link>
+              { loading ? (<Typography component="h1" variant="h5" color="primary">Refreshing Events</Typography>):
+              (
+              <div>
+              <Typography component="h1" variant="h5" color="primary">
+                No Events to show. Please add new events to manage
+                <hr/>
+              </Typography>
+              <Link color="inherit" href="/addEvent">
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+              >
+                Add Event
+              </Button>
+              </Link>
+              </div>
+              )
+              }
         </div>
       )}
-      <footer id="footer">
-        <Copyright />
-      </footer>
+
     </div>) : (<Redirect to="/signin" />)
   );
 }

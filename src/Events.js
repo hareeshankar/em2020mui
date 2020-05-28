@@ -16,9 +16,9 @@ class Events extends React.Component {
   }
   render() {
     return (
-      <div style={{width:"80%",marginTop:"80px",marginLeft:"auto",marginRight:"auto"}}>
+      <div style={{width:"80%",marginLeft:"auto",marginRight:"auto"}}>
       <Typography component="h1" variant="h5" color="primary">
-        Ongoing Events
+        Ongoing Events {" (" + (this.props.events.length) + ")"}
         <hr/>
       </Typography>
       <Container >

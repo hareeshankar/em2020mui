@@ -1,4 +1,5 @@
 import React from 'react';
+import Fragment from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -85,7 +86,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AppBarEM({token, signout, addEvent}) {
+export default function AppBarEM({token, signout, addEvent, username}) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -126,13 +127,20 @@ export default function AppBarEM({token, signout, addEvent}) {
             <MenuIcon />
           </IconButton>):(null)}
           { token ? (
+            <div style={{display:"flex", flexDirection:"Row", width:'100%'}}>
             <Typography variant="h6" noWrap >
               Event Manager
             </Typography>
+            <div id="welcome">
+            <Typography variant="h5" color="white">
+            Hi { "  " + username}
+            </Typography>
+            </div>
+            </div>
           ):
             (<Typography variant="h4" noWrap style={{margin:"auto"}}>
                       Event Manager
-                    </Typography>)}
+            </Typography>)}
 
         </Toolbar>
       </AppBar>

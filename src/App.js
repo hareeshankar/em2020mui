@@ -180,31 +180,21 @@ class App extends Component {
       userId +
       '" }}&access_token=' +
       this.state.token;
-    axios
-      .get(getEventsURL)
-      .then(response => {
-        this.setState({ events: response.data });
-        console.log("response received:", response);
-        //    this.setState({ events: response.data }, function() {
-        //     console.log(this.state.events);
-        //  });
-        console.log("events retrieved: ", this.state.events);
-        if (
-          typeof this.state.events != "undefined" &&
-          this.state.events != null &&
-          this.state.events.length != null &&
-          this.state.events.length > 0
-        ) {
-          console.log("Entered If block true");
-          this.setState({ showevents: true });
-        } else {
-          console.log("Entered If block false");
-          this.setState({ showevents: false });
-        }
-      })
-      .catch(function(error) {
-        console.log("AXIOS ERROR: ", error);
-      });
+
+      if (userId) {
+                  this.setState({loading:true})
+                  axios
+                    .get(getEventsURL)
+                    .then(response => {
+                      this.setState({ events: response.data, loading: false });
+                      console.log("response received:", response);
+                      console.log("events retrieved: ", this.state.events);
+                    })
+                    .catch(function(error) {
+                      this.setState({loading:false})
+                      console.log("AXIOS ERROR: ", error);
+                    });
+                }
   };
   getUser = userId => {
     let getUserURL =
@@ -253,7 +243,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-      <AppBar signout={this.signout} token={this.state.token} />
+      <AppBar signout={this.signout} token={this.state.token} username={this.state.user.username} />
       {this.state.loading ?  (<LinearProgress style={{zIndex:"2000"}}/>):(null)}
       <Switch>
       <Route exact path="/signin" render=  { (props) => (
@@ -273,7 +263,7 @@ class App extends Component {
       } />
       <Route exact path="/Home" render=  { (props) => (
         <Fragment>
-        <Home events={this.state.events} token={this.state.token} />
+        <Home events={this.state.events} token={this.state.token} username={this.state.user.username} loading={this.state.loading}/>
         </Fragment>)
       } />
       <Route exact path="/" render={() => <Redirect to="/home" />} />

@@ -9,11 +9,20 @@ body {
 }
 #footer {
   position : absolute;
-  bottom : 0;
+  bottom : 0px;
   width: 100%;
   margin-top : 10px;
   margin-bottom: 10px;
 
+}
+#home {
+  margin-top:80px;
+  align-items: center;
+}
+#welcome{
+  text-align: center;
+  margin-left: auto;
+  margin-right:0px;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
