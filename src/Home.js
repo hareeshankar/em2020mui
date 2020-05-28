@@ -26,14 +26,13 @@ export default function Home ({ events, token, username, loading}) {
     <div id="home">
       {events && events.length ? (<Events events={events} />) : (
         <div style={{width:"80%",marginTop:"80px",marginLeft:"auto",marginRight:"auto"}}>
-              { loading ? (<Typography component="h1" variant="h5" color="primary">Refreshing Events</Typography>):
+              { loading ? (<Typography component="h1" variant="h5" color="primary">Refreshing Events . . .</Typography>):
               (
-              <div>
+              <div style={{display:"flex", flexDirection:"row"}}>
               <Typography component="h1" variant="h5" color="primary">
-                No Events to show. Please add new events to manage
-                <hr/>
+              Start by Adding Events
               </Typography>
-              <Link color="inherit" href="/addEvent">
+              <Link color="inherit" href="/addEvent" style={{textDecoration: "none", float:"right", marginLeft:"20px"}}>
               <Button
                 type="submit"
                 variant="contained"
