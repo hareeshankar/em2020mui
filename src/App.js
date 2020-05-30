@@ -129,48 +129,51 @@ class App extends Component {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
   }
-  saveEvent = (props) => {
+  editEvent = (props) => {
+    console.log(JSON.stringify(props));
     this.setState({loading:true,errmsg:""});
-    console.log(props);
     axios.request({
-      method:'post',
+    method:"patch",
+    url:'https://eventmanagerapi.herokuapp.com/api/events?access_token='+this.state.token,
+    data: props
+    }).then(
+    res => {
+      console.log("Event Updated Successfully:", res);
+        this.setState({loading:false});
+      console.log("Loading: ", this.state.loading);
+      this.getEvents(props.userId);
+    }
+    ).catch( err =>
+    {
+    console.log("AXIOS ERROR: ", err);
+    this.setState({loading:false});
+    }
+    );
+    console.log(props);
+  }
+  saveEvent = (props) => {
+      this.setState({loading:true,errmsg:""});
+      axios.request({
+      method:"post",
       url:'https://eventmanagerapi.herokuapp.com/api/events?access_token='+this.state.token,
       data: props
-    }).then(
+      }).then(
       res => {
         console.log("Event added Successfully:", res);
           this.setState({loading:false});
         console.log("Loading: ", this.state.loading);
         this.getEvents(props.userId);
       }
-    ).catch( err =>
+      ).catch( err =>
       {
       console.log("AXIOS ERROR: ", err);
-      console.log(err.response.data.error.statuscode);
       this.setState({loading:false});
-      let errmsgobj = JSON.stringify(err.response.data.error.statusCode);
-      //this.setState({
-      //  errmsg: JSON.stringify(err.response.data)
-      //});
-      if (errmsgobj === "401") {
-        let mesg = "Sign Up Failed. Username or password incorrect";
-        console.log(mesg);
-        this.setState({
-          errmsg: mesg
-        });
       }
-      if (errmsgobj === "422") {
-        let mesg = "Sign Up Failed. Invalid Email/Username !";
-        console.log(mesg);
-        this.setState({
-          errmsg: mesg
-        });
-      }
+      );
+      console.log(props);
 
-      }
-    );
-    console.log(props);
-
+  //  let meth = props.edev ? ("patch") : ("post");
+  //console.log("meth = " + meth + " event " + JSON.stringify(props.event) + " edev = " + props.edev);
   }
 
   /* Get user and get events *//////////////////////////
@@ -180,7 +183,6 @@ class App extends Component {
       userId +
       '" }}&access_token=' +
       this.state.token;
-
       if (userId) {
                   this.setState({loading:true})
                   axios
@@ -191,7 +193,7 @@ class App extends Component {
                       console.log("events retrieved: ", this.state.events);
                     })
                     .catch(function(error) {
-                      this.setState({loading:false})
+                      //this.setState({loading:false})
                       console.log("AXIOS ERROR: ", error);
                     });
                 }
@@ -263,7 +265,7 @@ class App extends Component {
       } />
       <Route exact path="/Home" render=  { (props) => (
         <Fragment>
-        <Home events={this.state.events} token={this.state.token} username={this.state.user.username} loading={this.state.loading}/>
+        <Home events={this.state.events} token={this.state.token} username={this.state.user.username} loading={this.state.loading} editEvent={this.editEvent} />
         </Fragment>)
       } />
       <Route exact path="/" render={() => <Redirect to="/home" />} />

@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { Redirect } from "react-router-dom";
 
-export default function Home ({ events, token, username, loading}) {
+export default function Home ({ events, token, username, loading, editEvent}) {
   function Copyright() {
     return (
       <Typography variant="body2" color="textSecondary" align="center">
@@ -24,7 +24,7 @@ export default function Home ({ events, token, username, loading}) {
   return(
     token ? (
     <div id="home">
-      {events && events.length ? (<Events events={events} />) : (
+      {events && events.length ? (<Events events={events} editEvent={editEvent}/>) : (
         <div style={{width:"80%",marginTop:"80px",marginLeft:"auto",marginRight:"auto"}}>
               { loading ? (<Typography component="h1" variant="h5" color="primary">Refreshing Events . . .</Typography>):
               (

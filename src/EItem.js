@@ -5,7 +5,9 @@ class EItem extends React.Component {
   constructor(props) {
     super(props);
   }
-
+  function editEvent(id) {
+    console.log("Edit Event Clicked, ID: " + id);
+  }
   render() {
     const {
       eventname,
@@ -24,7 +26,7 @@ class EItem extends React.Component {
               {eventdate} , {eventloc}
             </Card.Subtitle>
             <Card.Text>{eventdes}</Card.Text>
-            <Card.Link href="#">Edit</Card.Link>
+            <Card.Link><button onClick={(id) => {console.log("ID =" + id);}}>Edit</button></Card.Link>
             <Card.Link href="#">Delete</Card.Link>
           </Card.Body>
         </Card>

@@ -28,7 +28,10 @@ export default function MediaCard(props) {
     userId,
     id
   } = props.event;
-  const subheader = eventloc + "  " + eventdate;
+  const subheader ="Location: " + eventloc + " Date: " + eventdate.split("T",1);
+  function onEdit(){
+    props.invokeEdit(props.event);
+  }
   return (
     <Card className={classes.root}>
       <CardActionArea>
@@ -41,7 +44,7 @@ export default function MediaCard(props) {
           </CardContent>
       </CardActionArea>
       <CardActions>
-          <Button size="small" color="primary">
+          <Button size="small" color="primary" onClick={onEdit}>
             Edit
           </Button>
           <Button size="small" color="primary">
