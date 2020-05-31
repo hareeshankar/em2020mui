@@ -40,7 +40,7 @@ class AddTodos extends Component {
     //Post ToDos
     axios.request({
     method:"post",
-    url:'http://localhost:3000/api/todos?access_token='+this.state.token,
+    url:'https://emapi2020.herokuapp.com/api/todos?access_token='+this.state.token,
     data: task
     }).then(
     res => {
