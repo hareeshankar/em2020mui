@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import CardHeader from '@material-ui/core/CardHeader';
+import {Link} from 'react-router-dom';
 
 const useStyles = makeStyles({
   root: {
@@ -32,6 +33,9 @@ export default function MediaCard(props) {
   function onEdit(){
     props.invokeEdit(props.event);
   }
+  function onManage(){
+    props.invokeManage(props.event);
+  }
   return (
     <Card className={classes.root}>
       <CardActionArea>
@@ -48,7 +52,7 @@ export default function MediaCard(props) {
             Edit
           </Button>
           <Button size="small" color="primary">
-            Manage
+             <Link to={`/manageEvent/${id}`} style={{textDecoration:"none",color:"inherit"}}>Manage</Link>
           </Button>
       </CardActions>
     </Card>

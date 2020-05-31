@@ -12,6 +12,9 @@ import AddEvent from "./AddEvent.js";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import LinearProgress from '@material-ui/core/LinearProgress';
+import ManageEvent from "./manageEvent.js";
+import AddTodos from "./AddTodos.js";
+
 class App extends Component {
   constructor(){
     super();
@@ -261,6 +264,16 @@ class App extends Component {
       <Route exact path="/addEvent" render=  { (props) => (
         <Fragment>
         <AddEvent saveEvent={this.saveEvent} token={this.state.token} userId={this.state.user.userId} />
+        </Fragment>)
+      } />
+      <Route exact path="/manageEvent/:id" render=  { (props) => (
+        <Fragment>
+        <ManageEvent {...props} token={this.state.token}/>
+        </Fragment>)
+      } />
+      <Route exact path="/addtodos/:userId/:eventId" render=  { (props) => (
+        <Fragment>
+        <AddTodos {...props} token={this.state.token}/>
         </Fragment>)
       } />
       <Route exact path="/Home" render=  { (props) => (
