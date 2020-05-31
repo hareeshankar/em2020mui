@@ -74,6 +74,18 @@ class manageEvent extends React.Component {
    onBtoE = () => {
      this.setState({gotoEvents: true});
    }
+   todoMap = () => {
+     return(
+       this.state.todos.map(todo => (
+
+           <tr key={todo.id}>
+           <td>{todo.taskname}</td>
+           <td>{todo.status}</td>
+           <td>{todo.assignedTo}</td>
+           </tr>
+       ))
+     )
+   }
   render() {
     return (
       !this.props.token  ?
@@ -98,7 +110,15 @@ class manageEvent extends React.Component {
       </Paper>
       <Paper style={{marginTop:"15px",padding:"15px"}}>
       <Typography variant="h6" color="primary">TASKS</Typography>
-      { this.state.todos && this.state.todos.length ? (<div>{JSON.stringify(this.state.todos)}</div>) : (
+      { this.state.todos && this.state.todos.length ? (
+        <div><table style={{border:"2px"}}>
+        <tr>
+        <td>Task Name</td>
+        <td>Status</td>
+        <td>Assigned To</td>
+        </tr>
+        {this.todoMap()}</table></div>
+        ) : (
         <Typography variant="subtitle2" color="secondary">No Tasks to show !  Add Tasks</Typography>
       )}
       </Paper>
