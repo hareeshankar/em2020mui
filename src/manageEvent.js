@@ -33,8 +33,12 @@ class manageEvent extends React.Component {
   }
   componentDidMount(){
     let eventId = this.props.match.params.id;
+    let getEvURL =
+    'https://eventmanagerapi.herokuapp.com/api/events/' + eventId +
+    '?access_token=' +
+    this.state.token;
     //Get Event
-    axios.get(`https://eventmanagerapi.herokuapp.com/api/events/${eventId}`)
+    axios.get(getEvURL)
    .then(response => {
      this.setState({
        id: response.data.id,
