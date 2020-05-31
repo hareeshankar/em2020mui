@@ -35,7 +35,7 @@ class App extends Component {
     axios.request(
       {
         method:'post',
-        url: 'https://eventmanagerapi.herokuapp.com/api/Users/login',
+        url: 'https://emapi2020.herokuapp.com/api/Users/login',
         data: cred
       }
     ).then(
@@ -80,7 +80,7 @@ class App extends Component {
     this.setState({loading:true,errmsg:""});
     axios.request({
       method:'post',
-      url:'https://eventmanagerapi.herokuapp.com/api/Users',
+      url:'https://emapi2020.herokuapp.com/api/Users',
       data: cred
     }).then(
       res => {
@@ -137,7 +137,7 @@ class App extends Component {
     this.setState({loading:true,errmsg:""});
     axios.request({
     method:"patch",
-    url:'https://eventmanagerapi.herokuapp.com/api/events?access_token='+this.state.token,
+    url:'https://emapi2020.herokuapp.com/api/events?access_token='+this.state.token,
     data: props
     }).then(
     res => {
@@ -158,7 +158,7 @@ class App extends Component {
       this.setState({loading:true,errmsg:""});
       axios.request({
       method:"post",
-      url:'https://eventmanagerapi.herokuapp.com/api/events?access_token='+this.state.token,
+      url:'https://emapi2020.herokuapp.com/api/events?access_token='+this.state.token,
       data: props
       }).then(
       res => {
@@ -182,7 +182,7 @@ class App extends Component {
   /* Get user and get events *//////////////////////////
   getEvents = userId => {
     let getEventsURL =
-      'https://eventmanagerapi.herokuapp.com/api/events?filter={"where" : {"userId" : "' +
+      'https://emapi2020.herokuapp.com/api/events?filter={"where" : {"userId" : "' +
       userId +
       '" }}&access_token=' +
       this.state.token;
@@ -203,7 +203,7 @@ class App extends Component {
   };
   getUser = userId => {
     let getUserURL =
-      "https://eventmanagerapi.herokuapp.com/api/Users/" +
+      "https://emapi2020.herokuapp.com/api/Users/" +
       userId +
       "?access_token=" +
       this.state.token;

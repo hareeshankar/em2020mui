@@ -34,7 +34,7 @@ class manageEvent extends React.Component {
   componentDidMount(){
     let eventId = this.props.match.params.id;
     let getEvURL =
-    'https://eventmanagerapi.herokuapp.com/api/events/' + eventId +
+    'https://emapi2020.herokuapp.com/api/events/' + eventId +
     '?access_token=' +
     this.state.token;
     //Get Event
@@ -54,16 +54,17 @@ class manageEvent extends React.Component {
    .catch(err => console.log(err));
    //Get ToDos
    let getToDosURL =
-     'https://eventmanagerapi.herokuapp.com/api/todos?filter={"where" : {"eventId" : "' +
+     'https://emapi2020.herokuapp.com/api/todos?filter={"where" : {"eventId" : "' +
      eventId +
      '" }}&access_token=' +
      this.state.token;
+
    axios.get(getToDosURL)
   .then(response => {
     this.setState({
       todos: response.data
     }, () => {
-      console.log("Manage event state: " + JSON.stringify(this.state.todos));
+      console.log("Manage TODOS state: " + JSON.stringify(this.state.todos));
     });
   })
   .catch(err => console.log(err));
