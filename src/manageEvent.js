@@ -15,6 +15,7 @@ import Container from '@material-ui/core/Container';
 import { Redirect } from "react-router-dom";
 import axios from "axios";
 import Paper from '@material-ui/core/Paper';
+import TasksItem from "./TasksItem.js";
 
 class manageEvent extends React.Component {
 
@@ -26,9 +27,11 @@ class manageEvent extends React.Component {
       eventdate:"",
       eventdes:"",
       id:"",
+      userId:"",
       todos: {},
       token: props.token,
-      gotoEvents: false
+      gotoEvents: false,
+      getToDosURL: ""
     }
   }
   componentDidMount(){
@@ -52,13 +55,12 @@ class manageEvent extends React.Component {
      });
    })
    .catch(err => console.log(err));
-   //Get ToDos
    let getToDosURL =
      'https://emapi2020.herokuapp.com/api/todos?filter={"where" : {"eventId" : "' +
      eventId +
      '" }}&access_token=' +
      this.state.token;
-
+     this.setState({getToDosURL:getToDosURL});
    axios.get(getToDosURL)
   .then(response => {
     this.setState({
@@ -68,21 +70,44 @@ class manageEvent extends React.Component {
     });
   })
   .catch(err => console.log(err));
+   }
 
-   }
-   //Back to events
-   onBtoE = () => {
-     this.setState({gotoEvents: true});
-   }
+   //Delete ToDos
+    dTask = (id) => {
+        console.log("Task ID: ", id);
+        //Patch ToDos
+        axios.request({
+        method:"delete",
+        url:'https://emapi2020.herokuapp.com/api/todos/'+ id + '?access_token='+this.state.token
+        }).then(
+        res => {
+          console.log("ToDos Deleted Successfully:", res);
+          //Refresh ToDos
+              axios.get(this.state.getToDosURL)
+             .then(response => {
+               this.setState({
+                 todos: response.data
+               }, () => {
+                 console.log("Refresh TODOS state: " + JSON.stringify(this.state.todos));
+               });
+              })
+             .catch(err => console.log(err));
+              }
+        ).catch( err =>
+        {
+        console.log("AXIOS ERROR1: ", err); } )
+    }
+     //Back to events
+     onBtoE = () => {
+       this.setState({gotoEvents: true});
+     }
+   //Mapping Todos
    todoMap = () => {
+
      return(
        this.state.todos.map(todo => (
 
-           <tr key={todo.id}>
-           <td>{todo.taskname}</td>
-           <td>{todo.status}</td>
-           <td>{todo.assignedTo}</td>
-           </tr>
+        <TasksItem task={todo} dTask={this.dTask} eventId={this.state.id} />
        ))
      )
    }
@@ -113,9 +138,10 @@ class manageEvent extends React.Component {
       { this.state.todos && this.state.todos.length ? (
         <div><table style={{border:"2px"}}>
         <tr>
-        <td>Task Name</td>
-        <td>Status</td>
-        <td>Assigned To</td>
+        <th>Task Name</th>
+        <th>Status</th>
+        <th>Assigned To</th>
+        <th>Actions</th>
         </tr>
         {this.todoMap()}</table></div>
         ) : (

@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import LinearProgress from '@material-ui/core/LinearProgress';
 import ManageEvent from "./manageEvent.js";
 import AddTodos from "./AddTodos.js";
+import EditTask from "./EditTask.js";
 
 class App extends Component {
   constructor(){
@@ -274,6 +275,11 @@ class App extends Component {
       <Route exact path="/addtodos/:userId/:eventId" render=  { (props) => (
         <Fragment>
         <AddTodos {...props} token={this.state.token}/>
+        </Fragment>)
+      } />
+      <Route exact path="/edittask/:eventId/:taskId" render=  { (props) => (
+        <Fragment>
+        <EditTask {...props} token={this.state.token}/>
         </Fragment>)
       } />
       <Route exact path="/Home" render=  { (props) => (
