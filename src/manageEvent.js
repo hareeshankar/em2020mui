@@ -16,6 +16,7 @@ import { Redirect } from "react-router-dom";
 import axios from "axios";
 import Paper from '@material-ui/core/Paper';
 import TasksItem from "./TasksItem.js";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 class manageEvent extends React.Component {
 
@@ -31,7 +32,8 @@ class manageEvent extends React.Component {
       todos: {},
       token: props.token,
       gotoEvents: false,
-      getToDosURL: ""
+      getToDosURL: "",
+      loading:false
     }
   }
   componentDidMount(){
@@ -40,6 +42,7 @@ class manageEvent extends React.Component {
     'https://emapi2020.herokuapp.com/api/events/' + eventId +
     '?access_token=' +
     this.state.token;
+    this.setState({loading:true});
     //Get Event
     axios.get(getEvURL)
    .then(response => {
@@ -49,39 +52,46 @@ class manageEvent extends React.Component {
        eventname: response.data.eventname,
        eventloc: response.data.eventloc,
        eventdate: response.data.eventdate,
-       eventdes: response.data.eventdes
+       eventdes: response.data.eventdes,
+       loading: false
      }, () => {
        console.log("Manage event state: " + JSON.stringify(this.state));
      });
    })
-   .catch(err => console.log(err));
+   .catch(err => {console.log(err);
+     this.setState({loading:false});
+   });
    let getToDosURL =
      'https://emapi2020.herokuapp.com/api/todos?filter={"where" : {"eventId" : "' +
      eventId +
      '" }}&access_token=' +
      this.state.token;
-     this.setState({getToDosURL:getToDosURL});
+     this.setState({getToDosURL:getToDosURL,loading:true});
    axios.get(getToDosURL)
   .then(response => {
-    this.setState({
-      todos: response.data
+    setTimeout(this.setState({
+      todos: response.data,
+      loading: false
     }, () => {
       console.log("Manage TODOS state: " + JSON.stringify(this.state.todos));
-    });
+    }), 90000);
+
   })
-  .catch(err => console.log(err));
+  .catch(err => {console.log(err);this.setState({loading:false});});
    }
 
    //Delete ToDos
     dTask = (id) => {
         console.log("Task ID: ", id);
         //Patch ToDos
+        this.setState({loading:true});
         axios.request({
         method:"delete",
         url:'https://emapi2020.herokuapp.com/api/todos/'+ id + '?access_token='+this.state.token
         }).then(
         res => {
           console.log("ToDos Deleted Successfully:", res);
+
           //Refresh ToDos
               axios.get(this.state.getToDosURL)
              .then(response => {
@@ -89,13 +99,14 @@ class manageEvent extends React.Component {
                  todos: response.data
                }, () => {
                  console.log("Refresh TODOS state: " + JSON.stringify(this.state.todos));
+                 this.setState({loading:false});
                });
               })
              .catch(err => console.log(err));
               }
         ).catch( err =>
         {
-        console.log("AXIOS ERROR1: ", err); } )
+        console.log("AXIOS ERROR1: ", err);this.setState({loading:false}); } )
     }
      //Back to events
      onBtoE = () => {
@@ -107,7 +118,7 @@ class manageEvent extends React.Component {
      return(
        this.state.todos.map(todo => (
 
-        <TasksItem task={todo} dTask={this.dTask} eventId={this.state.id} />
+        <TasksItem key={todo.id} task={todo} dTask={this.dTask} eventId={this.state.id} />
        ))
      )
    }
@@ -133,20 +144,23 @@ class manageEvent extends React.Component {
       Back to Events</Button>
       </div>
       </Paper>
-      <Paper style={{marginTop:"15px",padding:"15px"}}>
+      <Paper style={{marginTop:"15px",padding:"15px",justifyContent:"center",alignItems:"center"}}>
+        <div>
       <Typography variant="h6" color="primary">TASKS</Typography>
       { this.state.todos && this.state.todos.length ? (
-        <div><table style={{border:"2px"}}>
+        <div><table style={{border:"2px"}}><tbody>
         <tr>
         <th>Task Name</th>
         <th>Status</th>
         <th>Assigned To</th>
         <th>Actions</th>
         </tr>
-        {this.todoMap()}</table></div>
+        {this.todoMap()}</tbody></table></div>
         ) : (
         <Typography variant="subtitle2" color="secondary">No Tasks to show !  Add Tasks</Typography>
       )}
+      </div>
+        { this.state.loading ? (<LinearProgress style={{width:"100%",marginTop:"10px",zIndex:"2500"}} />) : (null)}
       </Paper>
       </div>))
     );
