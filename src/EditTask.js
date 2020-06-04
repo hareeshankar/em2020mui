@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { useHistory, Redirect, Link } from "react-router-dom";
 import axios from "axios";
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 class EditTask extends Component {
   constructor(props){
@@ -26,7 +27,8 @@ class EditTask extends Component {
       id:"",
       toME: false,
       returnurl: "",
-      token: props.token
+      token: props.token,
+      loading: false
     }
   }
   componentDidMount(){
@@ -40,6 +42,7 @@ class EditTask extends Component {
      taskId +
      '?access_token=' +
      this.state.token;
+     this.setState({loading:true});
    axios.get(getToDosURL)
   .then(response => {
     this.setState({
@@ -50,10 +53,10 @@ class EditTask extends Component {
       userId: response.data.userId,
       id: response.data.id
     }, () => {
-      console.log("Manage TODOS state: " + JSON.stringify(this.state.todos));
+      console.log("Manage TODOS state: " + JSON.stringify(this.state.todos));this.setState({loading:false});
     });
   })
-  .catch(err => console.log(err));
+  .catch(err => console.log(err));this.setState({loading:false});
    }
   onSubmit = e => {
     e.preventDefault();
@@ -66,6 +69,7 @@ class EditTask extends Component {
       id:this.state.id
     }
     //Patch ToDos
+    this.setState({loading:true});
     axios.request({
     method:"patch",
     url:'https://emapi2020.herokuapp.com/api/todos?access_token='+this.state.token,
@@ -73,11 +77,11 @@ class EditTask extends Component {
     }).then(
     res => {
       console.log("ToDos Updated Successfully:", res);
-      this.setState({toME: true})
+      this.setState({toME: true,loading:false})
     }
     ).catch( err =>
     {
-    console.log("AXIOS ERROR1: ", err);
+    console.log("AXIOS ERROR1: ", err);this.setState({loading:false});
     }
     );
   //  this.props.editEvent(modevent);
@@ -102,6 +106,7 @@ class EditTask extends Component {
             Edit Task Details
           </Typography>
           <form onSubmit={this.onSubmit}>
+            { this.state.loading ? (<LinearProgress style={{width:"100%",marginTop:"10px",zIndex:"2500"}} />) : (null)}
             <TextField
               variant="outlined"
               margin="normal"
@@ -148,6 +153,7 @@ class EditTask extends Component {
               fullWidth
               variant="contained"
               color="primary"
+              disabled={this.state.loading}
             >
               Submit
             </Button>

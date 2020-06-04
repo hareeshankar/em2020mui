@@ -33,7 +33,8 @@ class manageEvent extends React.Component {
       token: props.token,
       gotoEvents: false,
       getToDosURL: "",
-      loading:false
+      loading:false,
+      havtask:true
     }
   }
   componentDidMount(){
@@ -157,7 +158,7 @@ class manageEvent extends React.Component {
         </tr>
         {this.todoMap()}</tbody></table></div>
         ) : (
-        <Typography variant="subtitle2" color="secondary">No Tasks to show !  Add Tasks</Typography>
+        <Typography variant="subtitle2" color="secondary">{this.state.loading ? ("Refreshing Tasks"):("No Tasks to show !  Add Tasks")}</Typography>
       )}
       </div>
         { this.state.loading ? (<LinearProgress style={{width:"100%",marginTop:"10px",zIndex:"2500"}} />) : (null)}
